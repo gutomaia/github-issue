@@ -1,0 +1,7 @@
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+  <f:section title="GitHub Issue">
+    <f:entry description="user token that will submit the issue" title="GitHub Token" field="token" help="/plugin/github-issue/help-globalTokenConfig.html">
+    	<f:textbox />
+  	</f:entry>
+  </f:section>
+</j:jelly>
