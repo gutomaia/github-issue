@@ -8,7 +8,7 @@ public class Issue {
 	public String body;
 	public String assignee;
 	public String milestone;
-	public String labes;
+	public String labels;
 
 	public String toJson() {
 		StringBuilder sb = new StringBuilder();
