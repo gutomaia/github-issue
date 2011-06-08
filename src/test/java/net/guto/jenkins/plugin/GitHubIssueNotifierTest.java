@@ -10,14 +10,25 @@ public class GitHubIssueNotifierTest extends TestCase {
 
 	};
 
+	public GitHubIssueNotifierTest() {
+	}
+
 	public void testIsProjectUrlValid() {
-		GitHubIssueNotifier notifier = new GitHubIssueNotifier();
 		for (String projectUrl : projectUrls) {
-			assertTrue(notifier.isProjectUrlValid(projectUrl));
+			assertTrue(GitHubIssueNotifier.isProjectUrlValid(projectUrl));
 		}
 	}
 
 	public void testParseProjectUrl() {
+		String urls[][] = new String[4][3];
+		urls[0] = new String[] { "http://github.com/gutomaia/github-issue", "gutomaia", "github-issue" };
+		urls[1] = new String[] { "https://github.com/gutomaia/github-issue", "gutomaia", "github-issue" };
+		urls[2] = new String[] { "git@github.com:gutomaia/github-issue.git", "gutomaia", "github-issue" };
+		urls[3] = new String[] { "git://github.com/gutomaia/github-issue.git", "gutomaia", "github-issue" };
 
+		for (String[] expected : urls) {
+			assertEquals(GitHubIssueNotifier.parseGithubUsername(expected[0]), expected[1]);
+			assertEquals(GitHubIssueNotifier.parseGithubProjectName(expected[0]), expected[2]);
+		}
 	}
 }

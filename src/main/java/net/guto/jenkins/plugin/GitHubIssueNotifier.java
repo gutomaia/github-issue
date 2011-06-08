@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.sf.json.JSONObject;
@@ -189,19 +190,38 @@ public class GitHubIssueNotifier extends Notifier implements Serializable {
 	// private String regex = "^http://github\\.com/([A-Za-z]+)/([A-Za-z]+)$";
 	private static final String pathRegex = "([A-Za-z_\\-]+)/([A-Za-z_\\-]+)";
 	private static final String regexHttp = "^https?://github\\.com/" + pathRegex + "$";
-	private static final String regexSsh = "git@github\\.com:" + pathRegex + "\\.git";
-	private static final String regexGit = "git://github\\.com/" + pathRegex + "\\.git";
+	private static final String regexSsh = "^git@github\\.com:" + pathRegex + "(\\.git)?$";
+	private static final String regexGit = "^git://github\\.com/" + pathRegex + "\\.git$";
 
-	protected boolean isProjectUrlValid(String projectUrl) {
+	private static Matcher getMatcher(final String projectUrl) {
+		Pattern pattern;
+		if (Pattern.matches(regexHttp, projectUrl)) {
+			pattern = Pattern.compile(regexHttp);
+		} else if (Pattern.matches(regexSsh, projectUrl)) {
+			pattern = Pattern.compile(regexSsh);
+		} else if (Pattern.matches(regexGit, projectUrl)) {
+			pattern = Pattern.compile(regexGit);
+		} else {
+			throw new IllegalArgumentException();
+		}
+		return pattern.matcher(projectUrl);
+	}
+
+	protected static boolean isProjectUrlValid(final String projectUrl) {
 		return Pattern.matches(regexHttp, projectUrl) || Pattern.matches(regexSsh, projectUrl) || Pattern.matches(regexGit, projectUrl);
 	}
 
-	protected String parseGithubUsername() {
-		return null;
+	protected static String parseGithubUsername(final String projectUrl) {
+		Matcher matcher = getMatcher(projectUrl);
+		matcher.find();
+		return matcher.group(1);
+
 	}
 
-	protected String parseGithubProjectName() {
-		return null;
+	protected static String parseGithubProjectName(final String projectUrl) {
+		Matcher matcher = getMatcher(projectUrl);
+		matcher.find();
+		return matcher.group(2);
 	}
 
 }
