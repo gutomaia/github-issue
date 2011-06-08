@@ -35,14 +35,9 @@ public class GitHubIssueNotifier extends Notifier implements Serializable {
 
 	private static final Logger LOGGER = Logger.getLogger(GitHubIssueNotifier.class.getName());
 
-	String githubProjectUrl;
-	String githubProjectUsername;
-	String githubProjectName;
-
-	// for testing
-	protected GitHubIssueNotifier() {
-
-	}
+	String projectUrl;
+	String projectOwner;
+	String projectName;
 
 	@DataBoundConstructor
 	public GitHubIssueNotifier(String githubProjectUrl) {
@@ -50,19 +45,15 @@ public class GitHubIssueNotifier extends Notifier implements Serializable {
 			LOGGER.entering(this.getClass().getName(), "constructor", new Object[] { githubProjectUrl });
 		}
 		LOGGER.info("Construtor: " + githubProjectUrl);
-		this.githubProjectUrl = githubProjectUrl;
+		this.projectUrl = githubProjectUrl;
 	}
 
-	public String getGithubProjectUrl() {
-		if (LOGGER.isLoggable(FINE)) {
-			LOGGER.entering(this.getClass().getName(), "constructor");
-		}
-		LOGGER.info("Construtor: noargs");
-		return githubProjectUrl;
+	public String getProjectUrl() {
+		return projectUrl;
 	}
 
-	public void setGithubProjectUrl(String githubProjectUrl) {
-		this.githubProjectUrl = githubProjectUrl;
+	public void setProjectUrl(String githubProjectUrl) {
+		this.projectUrl = githubProjectUrl;
 	}
 
 	public BuildStepMonitor getRequiredMonitorService() {
@@ -105,7 +96,7 @@ public class GitHubIssueNotifier extends Notifier implements Serializable {
 				LOGGER.info(fail.getId()); // junit/guto.net/AppTest/testApp
 				LOGGER.info(fail.getName()); // testApp
 				LOGGER.info(fail.getTitle()); // CaseResult: testApp
-				LOGGER.info(githubProjectUrl + "important"); // CaseResult:
+				LOGGER.info(projectUrl + "important"); // CaseResult:
 				body.append("automatic message\n");
 				body.append(fail.getId() + "\n");
 				body.append(fail.getFullName() + "\n");
