@@ -27,17 +27,16 @@ import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
 
-//Changed from notifier to publisher
-public class GitHubIssuePublisher extends Notifier implements Serializable {
+public class GitHubIssueNotifier extends Notifier implements Serializable {
 
 	private static final long serialVersionUID = 8429400310427930527L;
 
-	private static final Logger LOGGER = Logger.getLogger(GitHubIssuePublisher.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(GitHubIssueNotifier.class.getName());
 
 	String githubProjectUrl;
 
 	@DataBoundConstructor
-	public GitHubIssuePublisher(String githubProjectUrl) {
+	public GitHubIssueNotifier(String githubProjectUrl) {
 		if (LOGGER.isLoggable(FINE)) {
 			LOGGER.entering(this.getClass().getName(), "constructor", new Object[] { githubProjectUrl });
 		}
@@ -109,7 +108,7 @@ public class GitHubIssuePublisher extends Notifier implements Serializable {
 				Issue issue = new Issue();
 				issue.user = "gUTOnET";
 				issue.project = "test-git-issue";
-				issue.title = "AUTOMESSAGE: teste";
+				issue.title = "AUTOMESSAGE: teste asds";
 				issue.assignee = username;
 				issue.body = body.toString();
 				GitHubIssueHelper.openIssue(issue, username, password);
@@ -134,7 +133,7 @@ public class GitHubIssuePublisher extends Notifier implements Serializable {
 		String password;
 
 		DescriptorImpl() {
-			super(GitHubIssuePublisher.class);
+			super(GitHubIssueNotifier.class);
 		}
 
 		@Override
