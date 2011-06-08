@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 import net.sf.json.JSONObject;
 
@@ -34,6 +35,13 @@ public class GitHubIssueNotifier extends Notifier implements Serializable {
 	private static final Logger LOGGER = Logger.getLogger(GitHubIssueNotifier.class.getName());
 
 	String githubProjectUrl;
+	String githubProjectUsername;
+	String githubProjectName;
+
+	// for testing
+	protected GitHubIssueNotifier() {
+
+	}
 
 	@DataBoundConstructor
 	public GitHubIssueNotifier(String githubProjectUrl) {
@@ -176,6 +184,24 @@ public class GitHubIssueNotifier extends Notifier implements Serializable {
 		public String getToken() {
 			return token;
 		}
+	}
+
+	// private String regex = "^http://github\\.com/([A-Za-z]+)/([A-Za-z]+)$";
+	private static final String pathRegex = "([A-Za-z_\\-]+)/([A-Za-z_\\-]+)";
+	private static final String regexHttp = "^https?://github\\.com/" + pathRegex + "$";
+	private static final String regexSsh = "git@github\\.com:" + pathRegex + "\\.git";
+	private static final String regexGit = "git://github\\.com/" + pathRegex + "\\.git";
+
+	protected boolean isProjectUrlValid(String projectUrl) {
+		return Pattern.matches(regexHttp, projectUrl) || Pattern.matches(regexSsh, projectUrl) || Pattern.matches(regexGit, projectUrl);
+	}
+
+	protected String parseGithubUsername() {
+		return null;
+	}
+
+	protected String parseGithubProjectName() {
+		return null;
 	}
 
 }
