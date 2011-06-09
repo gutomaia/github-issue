@@ -89,7 +89,7 @@ public class GitHubIssueNotifier extends Notifier implements Serializable {
 			DescriptorImpl descriptor = (DescriptorImpl) getDescriptor();
 			final String username = descriptor.getUsername();
 			final String password = descriptor.getPassword();
-			Issue issue = getIssue(testResultAction.getFailedTests(), username, password, build.getNumber());
+			Issue issue = getIssue(testResultAction.getFailedTests(), projectOwner, projectName, build.getNumber());
 			GitHubIssueHelper.openIssue(issue, username, password);
 		}
 		if (LOGGER.isLoggable(FINE)) {
@@ -200,6 +200,11 @@ public class GitHubIssueNotifier extends Notifier implements Serializable {
 	}
 
 	protected static Issue getIssue(final List<CaseResult> caseResults, String projectOwner, String projectName, int buildNumber) {
+		if (LOGGER.isLoggable(FINE)) {
+			LOGGER.entering(GitHubIssueNotifier.class.getName(), "doTestGithubAuthentication", new Object[] { caseResults, projectOwner, projectName,
+					buildNumber });
+		}
+
 		Issue issue = new Issue();
 		issue.owner = projectOwner;
 		issue.project = projectName;

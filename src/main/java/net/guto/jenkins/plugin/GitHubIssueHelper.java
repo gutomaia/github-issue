@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.regex.Pattern;
 
 import net.sf.json.JSONObject;
 
@@ -45,8 +46,10 @@ public class GitHubIssueHelper {
 			// System.out.println(result);
 			// System.out.println("*** END ***");
 		} catch (IOException e) {
-			// TODO: threat the 401 Not authorized http status code
-			// TODO: threat the 400 Bad request http status code
+			String regex = "^Server returned HTTP response code: (\\d){3} for URL: (.*)$";
+			if (Pattern.matches(regex, e.getMessage())){
+				//400 401 500
+			}
 			e.printStackTrace();
 		}
 	}
