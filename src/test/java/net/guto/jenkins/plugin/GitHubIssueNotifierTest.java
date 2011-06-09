@@ -1,5 +1,6 @@
 package net.guto.jenkins.plugin;
 
+import hudson.tasks.junit.CaseResult;
 import junit.framework.TestCase;
 
 public class GitHubIssueNotifierTest extends TestCase {
@@ -30,5 +31,11 @@ public class GitHubIssueNotifierTest extends TestCase {
 			assertEquals(GitHubIssueNotifier.parseGithubUsername(expected[0]), expected[1]);
 			assertEquals(GitHubIssueNotifier.parseGithubProjectName(expected[0]), expected[2]);
 		}
+	}
+	
+	
+	public void testGetIssueWithOneCaseResult(){
+		//CaseResult caseResult
+		//TODO: use mockito here
 	}
 }

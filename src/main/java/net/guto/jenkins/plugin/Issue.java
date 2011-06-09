@@ -2,7 +2,7 @@ package net.guto.jenkins.plugin;
 
 public class Issue {
 
-	public String user;
+	public String owner;
 	public String project;
 	public String title;
 	public String body;
@@ -10,13 +10,4 @@ public class Issue {
 	public String milestone;
 	public String labels;
 
-	public String toJson() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("{");
-		sb.append("\"title\":\"" + title + "\",");
-		sb.append("\"body\":\"" + body + "\",");
-		sb.append("\"assignee\":\"" + assignee + "\"");
-		sb.append("}");
-		return sb.toString();
-	}
 }
