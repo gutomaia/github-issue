@@ -40,20 +40,21 @@ public class GitHubIssueNotifier extends Notifier implements Serializable {
 	String projectName;
 
 	@DataBoundConstructor
-	public GitHubIssueNotifier(String githubProjectUrl) {
+	public GitHubIssueNotifier(String projectUrl) {
 		if (LOGGER.isLoggable(FINE)) {
-			LOGGER.entering(this.getClass().getName(), "constructor", new Object[] { githubProjectUrl });
+			LOGGER.entering(this.getClass().getName(), "constructor", new Object[] { projectUrl });
 		}
-		LOGGER.info("Construtor: " + githubProjectUrl);
-		this.projectUrl = githubProjectUrl;
+		this.projectUrl = projectUrl;
+		// projectOwner = parseGithubProjectName(projectUrl);
+		// projectName = parseGithubUsername(projectUrl);
 	}
 
 	public String getProjectUrl() {
 		return projectUrl;
 	}
 
-	public void setProjectUrl(String githubProjectUrl) {
-		this.projectUrl = githubProjectUrl;
+	public void setProjectUrl(String projectUrl) {
+		this.projectUrl = projectUrl;
 	}
 
 	public BuildStepMonitor getRequiredMonitorService() {
@@ -103,13 +104,22 @@ public class GitHubIssueNotifier extends Notifier implements Serializable {
 				body.append(fail.getDurationString() + "\n");
 				body.append(fail.getErrorDetails() + "\n");
 				body.append(fail.getErrorStackTrace() + "\n");
-				String username = DESCRIPTOR.getUsername();
-				String password = DESCRIPTOR.getPassword();
+				String username = null;
+				String password = null;
+				try {
+					DescriptorImpl descriptor = (DescriptorImpl) getDescriptor();
+					username = descriptor.getUsername();
+					password = descriptor.getPassword();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				LOGGER.info(username);
+				LOGGER.info(password);
 				Issue issue = new Issue();
 				issue.user = "gUTOnET";
 				issue.project = "test-git-issue";
 				issue.title = "AUTOMESSAGE: teste asds";
-				issue.assignee = username;
+				issue.assignee = "gUTOnET";
 				issue.body = body.toString();
 				GitHubIssueHelper.openIssue(issue, username, password);
 			}
@@ -154,15 +164,19 @@ public class GitHubIssueNotifier extends Notifier implements Serializable {
 			}
 			username = json.getString("username");
 			password = json.getString("password");
-			token = json.getString("token"); // For future use;
+			token = json.getString("token");
 
 			LOGGER.info("Saving Github token: " + token);
 			save();
 			return super.configure(req, json);
 		}
 
-		FormValidation doGitHubProjectUrlCheck(@QueryParameter final String githubProjectUrl) throws IOException {
-			return FormValidation.ok();
+		FormValidation doProjectUrlCheck(@QueryParameter final String projectUrl) throws IOException {
+			if (isProjectUrlValid(projectUrl)) {
+				return FormValidation.ok();
+			}
+			return FormValidation.error("GitHub project url is invalid");
+
 		}
 
 		public String getUsername() {
@@ -176,9 +190,12 @@ public class GitHubIssueNotifier extends Notifier implements Serializable {
 		public String getToken() {
 			return token;
 		}
+
+		public FormValidation doTestGithubAuthentication(@QueryParameter String username, @QueryParameter String password) {
+			return FormValidation.ok();
+		}
 	}
 
-	// private String regex = "^http://github\\.com/([A-Za-z]+)/([A-Za-z]+)$";
 	private static final String pathRegex = "([A-Za-z_\\-]+)/([A-Za-z_\\-]+)";
 	private static final String regexHttp = "^https?://github\\.com/" + pathRegex + "$";
 	private static final String regexSsh = "^git@github\\.com:" + pathRegex + "(\\.git)?$";
@@ -214,5 +231,4 @@ public class GitHubIssueNotifier extends Notifier implements Serializable {
 		matcher.find();
 		return matcher.group(2);
 	}
-
 }

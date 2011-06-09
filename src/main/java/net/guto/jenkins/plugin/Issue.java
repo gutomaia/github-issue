@@ -1,7 +1,7 @@
 package net.guto.jenkins.plugin;
 
 public class Issue {
-	
+
 	public String user;
 	public String project;
 	public String title;
@@ -19,5 +19,4 @@ public class Issue {
 		sb.append("}");
 		return sb.toString();
 	}
-
 }

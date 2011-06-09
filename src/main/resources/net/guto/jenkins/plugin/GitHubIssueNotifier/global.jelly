@@ -9,6 +9,8 @@
     <f:entry description="user token that will submit the issue" title="GitHub Token" field="token" help="/plugin/github-issue/help-globalTokenConfig.html">
     	<f:textbox />
   	</f:entry>
+	
+	<f:validateButton title="Test Connection" progress="Testing..." method="testGithubAuthentication" with="username, password" />
 
   </f:section>
 </j:jelly>
